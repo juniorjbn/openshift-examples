@@ -4,6 +4,7 @@
 ```sh
 oc project openshift-infra   #choose a namespace
 oc adm policy add-cluster-role-to-user cluster-reader -z default  #for the default account give cluster wide read permission so prometheus can read metrics
+oc policy add-cluster-role-to-user cluster-reader system:serviceaccount:openshift-infra:default #For 1.4 openshift version
 oc adm policy add-scc-to-user anyuid -z default   #damn!  allow containers with root USER will fix in future
 oc new-app grafana/grafana   #Deploy grafana
 oc volume dc/grafana --remove --name=grafana-volume-1  #Some strange fix to make grafana work
@@ -12,6 +13,14 @@ oc new-app prom/prometheus     #deploy latest prometheus
 oc create -f https://raw.githubusercontent.com/debianmaster/openshift-examples/master/promethus/prom-configmap.yml     #mount this configmap at at /etc/prometheus/prometheus.yml  #Scrape rules for prometheus 
 oc volume dc/prometheus --add --name=prom-k8s -m /etc/prometheus -t configmap --configmap-name=prom-k8s  #set rules inside prom 
 ```
+
+### Add nginx reverse proxy to protect access with basic_auth
+```
+oc new-app https://github.com/getupcloud/nginx-ex.git --name=proxy
+```
+change repo to https://github.com/getupcloud/nginx-proxy.git
+add .htpasswd to source 
+
 
 ### Add prometheus as Datasource & Dashboard in grafna  
 ##### Data source
