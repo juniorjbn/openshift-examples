@@ -3,9 +3,10 @@
 ### Deploy Prometheus & Grafana
 ```sh
 oc project openshift-infra   #choose a namespace
-oc adm policy add-cluster-role-to-user cluster-reader -z default  #for the default account give cluster wide read permission so prometheus can read metrics
+#for the default account give cluster wide read permission so prometheus can read metrics
 oc policy add-cluster-role-to-user cluster-reader system:serviceaccount:openshift-infra:default #For 1.4 openshift version
-oc adm policy add-scc-to-user anyuid -z default   #damn!  allow containers with root USER will fix in future
+#damn!  allow containers with root USER will fix in future
+oc adm policy add-scc-to-user anyuid system:serviceaccount:openshift-infra:default
 oc new-app grafana/grafana   #Deploy grafana
 oc volume dc/grafana --remove --name=grafana-volume-1  #Some strange fix to make grafana work
 oc volume dc/grafana --remove --name=grafana-volume-2  #Some strange fix to make grafana work
