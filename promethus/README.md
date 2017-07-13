@@ -4,7 +4,7 @@
 ```sh
 oc project openshift-infra   #choose a namespace
 #for the default account give cluster wide read permission so prometheus can read metrics
-oc policy add-cluster-role-to-user cluster-reader system:serviceaccount:openshift-infra:default #For 1.4 openshift version
+oc adm policy add-cluster-role-to-user cluster-reader system:serviceaccount:openshift-infra:default #For 1.4 openshift version
 #damn!  allow containers with root USER will fix in future
 oc adm policy add-scc-to-user anyuid system:serviceaccount:openshift-infra:default
 oc new-app grafana/grafana   #Deploy grafana
